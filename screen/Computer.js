@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import monitor from './pics/monitor.png'
 import ricecooker from './pics/ricecooker.png'
 import iron from './pics/iron.png'
@@ -15,8 +15,26 @@ import { Modal, Animated,Pressable, TextInput, ImageBackground} from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import close from './pics/close.png'
 import success from './pics/success.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { mutateMyDevice } from './components/deviceSlice';
+
+
+
 
 const Computer = ({ navigation }) => {
+  const devices = useSelector((state) => state.devices.myDevice)
+  const [data, setData] = useState({
+    noOfDevices: '',
+    noOfHours: ''
+  })
+
+  const [image, setImage] = useState({
+    monitor:monitor
+  })
+
+
+  const dispatch = useDispatch()
   return (
     <ScrollView>
   
@@ -54,11 +72,33 @@ const Computer = ({ navigation }) => {
           <Text style={{ bottom:330, fontWeight:"bold", fontSize:20}}>
             Wattage: 300W
           </Text>
-          <TextInput style = {styles.usageInput} placeholder="number of hours used" keyboardType="numeric"/>
-          <TextInput style = {styles.usageInput1} placeholder="number of devices" keyboardType="numeric"/>
+          <Image  onChange={() => {
+                setImage({
+                    monitor: image
+                });
+            }}></Image>
+          <TextInput style = {styles.usageInput} keyboardType="numeric" placeholder="No. of Devices" value={data.noOfDevices} 
+          onChangeText={(text) => {
+                setData({
+                    ...data,
+                    noOfDevices: text
+                });
+            }}/>
+          <TextInput style = {styles.usageInput1} keyboardType="numeric" placeholder="No. of Hours" value={data.noOfHours} onChangeText={(text) => {
+                setData({
+                    ...data,
+                    noOfHours: text
+                });
+            }}/>
 
           <TouchableOpacity style={styles.mButton} onPress={()=> {
           navigation.navigate('Devices')
+          dispatch(mutateMyDevice({
+            monitor: image.monitor,
+            noOfDevices: data.noOfDevices,
+            noOfHours: data.noOfHours,
+        })) 
+          Alert.alert ("Device Successfully Added!") 
         }}> 
             <Text style={styles.mTxt}>SAVE</Text>
           </TouchableOpacity>

@@ -33,12 +33,15 @@ import Cfan from './screen/Cfan';
 import Ref from './screen/Ref';
 import Heater from './screen/Heater';
 import Result from './screen/Result';
+import { Provider } from 'react-redux';
+import store from './plugins/store';
 
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="GetDone" screenOptions={{headerShown:false}}>
         <Stack.Screen name="GetDone" component={GetDone} />
@@ -76,6 +79,7 @@ export default function App() {
 
         </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
     
   );
 }

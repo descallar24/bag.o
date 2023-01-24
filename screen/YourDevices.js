@@ -15,8 +15,20 @@ import { Modal, Animated,Pressable, TextInput, ImageBackground} from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import close from './pics/close.png'
 import success from './pics/success.png'
+import { useSelector } from 'react-redux';
+
+import DeviceCard from './components/deviceCard';
 
 const YourDevices = ({ navigation }) => {
+
+  const [images, setImages] = React.useState([
+    monitor,
+    ricecooker,
+    iron
+  ]);
+
+  const myDevices = useSelector((state) => state.devices.myDevice)
+
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
@@ -31,48 +43,11 @@ const YourDevices = ({ navigation }) => {
         }}>
           <Text style={styles.btext}>BACK</Text>
         </TouchableOpacity>
-        <View>
-        <View style={styles.monitorbg}>
-        <TouchableOpacity onPress={()=> {
-          navigation.navigate('Computeredit')
-        }}>
-        <Image source={monitor} style={styles.monitorimg}/>
-        </TouchableOpacity>
-        </View>
-        <View style={styles.ricecookerbg}>
-        <TouchableOpacity onPress={()=> {
-          navigation.navigate('Ricecookeredit')
-        }}>
-        <Image source={ricecooker} style={styles.ricecookerimg}/>
-        </TouchableOpacity>  
-        </View>
-        <View style={styles.ironbg}>
-        <TouchableOpacity onPress={()=> {
-          navigation.navigate('Flatironedit')
-        }} >
-        <Image source={iron} style={styles.ironimg}/>
-        </TouchableOpacity> 
-        </View>
-        <View style={styles.airconbg}>
-        <TouchableOpacity onPress={()=> {
-          navigation.navigate('ACedit')
-        }}>
-        <Image source={aircon} style={styles.airconimg}/>
-        </TouchableOpacity>
-        </View>
 
-        <Text style={styles.t1}>No. of Device:2 </Text>
-        <Text style={styles.t2}>No. of Device:1 </Text>
-        <Text style={styles.t3}>No. of Device:1 </Text>
-        <Text style={styles.t4}>No. of Device:2 </Text>
-
-        <Text style={styles.p1}>No. of hours:6 </Text>
-        <Text style={styles.p2}>No. of hours:20mins </Text>
-        <Text style={styles.p3}>No. of hours:5mins </Text>
-        <Text style={styles.p4}>No. of hours:16 </Text>
-     
-
-        </View>
+        {
+            (myDevices != undefined) ? myDevices.map(obj => <DeviceCard image={obj.image} noOfDevices={obj.noOfDevices} noOfHours={obj.noOfHours} />) : null
+          }
+      
       </SafeAreaView>
     </ScrollView>
   );

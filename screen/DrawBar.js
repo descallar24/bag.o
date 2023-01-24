@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useState } from 'react';
-import {TextInput, Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Touchable } from 'react-native';
+import {Alert, TextInput, Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Touchable } from 'react-native';
 import About1 from './About';
 import Devices from './Devices';
 import female from './pics/female.png';
@@ -15,21 +15,78 @@ import Login from '../authentication/login';
 import Instructions from './Instructions';
 import History from './History';
 import YourDevices from './YourDevices';
+import { Modal,Pressable, ImageBackground,TouchableWithoutFeedback,Keyboard} from "react-native";
+import { bool } from 'yup';
 
+const ModalPoup = ({visible, children}) => {
+    const [showModal, setShowModal] = React.useState(visible);
+    const scaleValue = React.useRef(new Animated.Value(0)).current;
+    React.useEffect(() => {
+      toggleModal();
+    }, [visible]);
+    const toggleModal = () => {
+      if (visible) {
+        setShowModal(true);
+        Animated.spring(scaleValue, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      } else {
+        setTimeout(() => setShowModal(false), 200);
+        Animated.timing(scaleValue, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      }
+    };
+    return (
+      <Modal transparent visible={showModal}>
+        <View style={styles.modalBackGround}>
+          <Animated.View
+            style={[styles.modalContainer, {transform: [{scale: scaleValue}]}]}>
+            {children}
+          </Animated.View>
+        </View>
+      </Modal>
+      
+    );
+  };
+  
 export default function DrawBar() {
+  
+    const [visible, setVisible] = React.useState(false);
     const [currentTab, setCurrentTab] = useState("Dashboard");
     const [showMenu, setShowMenu] = useState(false);
-    const [budget, setBudget] = useState('')
     const kwh = 16.673;
     const [result, setResult] = useState('')
     const offsetValue = useRef(new Animated.Value(0)).current;
     const scaleValue = useRef(new Animated.Value(1)).current;
     const closeButtonOffset = useRef(new Animated.Value(0)).current;
     const navigation = useNavigation();
-   
+    const [Input, setInput] = useState('');
+  /*  const showMessage = (val) => 
+      setBudget(val.nativeEvent.text);
+    }*/         
+    const [text,setText] = useState('');
+    const [budget, setBudget] = useState('')
+    const total = budget * kwh;
 
+    const reach = "You have reach the limit";
+    const notreach = "Still on the budget";
+
+    const status = () => {
+      setVisible(false)
+    if (total > text) {
+      Alert.alert(reach);
+    } else {
+      Alert.alert(notreach) ;
+    };
+  }
 
     return (
+      
         <SafeAreaView style = {styles.container}>
             <View style={{ justifyContent: 'flex-start', padding: 15 }}>
                 <Image source={female} style={{
@@ -39,6 +96,63 @@ export default function DrawBar() {
           marginTop: 50,
           marginLeft: 25
         }}></Image>
+        <ModalPoup visible={visible}>
+          <View style={{alignItems: 'center'}}>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={status}>
+                <Image
+                  source={close}
+                  style={{height: 30, width: 30, top:-190, left:160}}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.syd}>
+          <Text style={styles.textsyd}>RESULT</Text>
+        </View>
+  
+          <Text style={{right:110, top:30, fontWeight:"bold", fontSize:20}}>
+            Budget: 
+          </Text>
+         
+          <Text style={{right:110, top:90, fontWeight:"bold", fontSize:20}}>
+            Total: 
+          </Text>
+          <Text style={{
+                alignItems: "center",
+                borderColor: 'black',
+                border: 10,
+                width: 220,
+                height: 40,
+                bottom:25,
+                textAlign: 'center',
+                borderWidth: 3,
+                left:40,
+                borderRadius:20,
+                fontSize:30,
+                color: "red"
+              
+          }}>₱{text}</Text>
+            
+              <Text style={{
+                alignItems: "center",
+                borderColor: 'black',
+                border: 10,
+                width: 220,
+                height: 40,
+                bottom:-20,
+                textAlign: 'center',
+                borderWidth: 3,
+                left:40,
+                borderRadius:20,
+                fontSize:22,
+                color: "red"
+
+          }}>₱{total}</Text>
+
+
+         
+        </ModalPoup>
         <Text style = {styles.text}>Lady Maxine Sarsalijo</Text>
         <TouchableOpacity>
             <Text style = {styles.vprof} onPress={()=> {
@@ -125,9 +239,7 @@ export default function DrawBar() {
                     justifyContent: "center",
                     width: 150,
                     height: 150,
-                    marginBottom: -5,
-                    marginTop: 10,
-                    marginLeft: 100
+                    left: 110,
                 }}></Image>
                  <Text style = {{
                      fontStyle: "normal",
@@ -138,10 +250,12 @@ export default function DrawBar() {
                      margin:5,
                      fontWeight: "bold",
                      fontFamily: "sans-serif-condensed",
-                     marginBottom: 400,
-                     right: 55
+                     marginBottom: 410,
+                     right: 40,
+                     top:10,
+                     id:'iyb'
                  }}>
-                 Input Your Budget: {budget} 
+                 Input Your Budget: ₱{text}
             </Text>
             <TextInput style ={{borderWidth: 2,
                     height: 50,
@@ -154,42 +268,29 @@ export default function DrawBar() {
                     backgroundColor: '#EBE8CD',
                     marginBottom: 10,
                     justifyContent: 'center',
+                    left:17,
                     fontFamily: "sans-serif-condensed"}} placeholder="PHP" 
                     keyboardType="numeric"
-                    onSubmitEditing={(val) => setBudget(val.nativeEvent.text)}/>
-            <TouchableOpacity style={{width: 200,
-                    backgroundColor: '#DCB900',
-                    height: 50,
-                    width: 130,
-                    borderRadius: 20,
-                    textAlign:'center',
-                    marginBottom: 5,
-                    marginTop: 5,
-                    marginLeft: 0,
-                    left: 25}}>
-                <Text style = {{
-                    fontStyle: "normal",
-                    fontSize: 25,
-                    textAlign:'center',
-                    height: 60,
-                    padding:5,
-                    margin:5,
-                    fontWeight: "bold",
-                    fontFamily: "sans-serif-condensed",
-                    marginBottom: 400
-                }}>SAVE</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{
+                    onChangeText={(text) => setText(text)}
+                    value={text}
+                    
+                  //  onSubmitEditing={(val) => setBudget(val.nativeEvent.text)}
+                    />
+        
+            
+            <TouchableOpacity
+                onPress={Keyboard.dismiss}
+                style={{
                 width: 200,
                 backgroundColor: '#DCB900',
                 height: 50,
                 width: 130,
                 borderRadius: 20,
                 textAlign:'center',
-                marginBottom: 5,
-                marginTop: -55,
-                left: 180
-            }}>
+                left:120,
+                top:10,
+            }}
+            >
                 <Text style = {{ fontStyle: "normal",
                     fontSize: 25,
                     textAlign:'center',
@@ -198,7 +299,8 @@ export default function DrawBar() {
                     margin:5,
                     fontWeight: "bold",
                     fontFamily: "sans-serif-condensed",
-                    marginBottom: 400}}>UPDATE</Text>
+                    marginBottom: 400}}>SAVE</Text
+                   >
             </TouchableOpacity> 
             <Text style = {{
                 fontStyle: "normal",
@@ -208,7 +310,8 @@ export default function DrawBar() {
                 fontFamily: "sans-serif-condensed",
                 marginTop: 20,
                 marginLeft: -120,
-                color: "red"
+                color: "red",
+                left: 17
             }}>Electricity Usage Calculator</Text>   
             <Text style = {{
                 fontStyle: "normal",
@@ -216,8 +319,8 @@ export default function DrawBar() {
                 textAlign:'center',
                 fontWeight: "bold",
                 fontFamily: "sans-serif-condensed",
-                marginTop: 5,
-                marginLeft: -120
+                marginTop: 20,
+                marginLeft: -90
             }} >Price of KW/H: ₱{kwh}</Text>
             <Text style = {{
                 fontStyle: "normal",
@@ -227,7 +330,10 @@ export default function DrawBar() {
                 marginTop: 20,
                 marginLeft: 50
             }}>Usage: </Text>
-            <TextInput style = {{
+            <TextInput
+                onChangeText={(budget) => setBudget(budget)}
+                value={budget}
+                style = {{
                 borderWidth: 2,
                 height: 40,
                 width: 220,
@@ -240,7 +346,8 @@ export default function DrawBar() {
                 marginTop: -33,
                 marginLeft: 110
             }} placeholder="Input Electricity Usage " keyboardType="numeric"/>
-            <TouchableOpacity style={{
+            <TouchableOpacity onPress={() => setVisible(true)
+        } style={{
                 width: 200,
                 backgroundColor: '#DCB900',
                 height: 50,
@@ -249,7 +356,7 @@ export default function DrawBar() {
                 textAlign:'center',
                 marginBottom: 5,
                 marginTop: 25,
-                left: 45
+                left: 60
             }}>
                 <Text style = {{
                     fontStyle: "normal",
@@ -290,6 +397,85 @@ const TabButton = (currentTab, setCurrentTab,title) =>{
 
 
 const styles = StyleSheet.create({
+    textsyd: {
+        fontStyle: "normal",
+        fontSize: 25,
+        textAlign:'center',
+        height: 60,
+        padding:5,
+        fontWeight: "bold",
+        fontFamily: "sans-serif-condensed",  
+      },
+      syd:{
+        backgroundColor: '#DCB900',
+        height: 40,
+        width: 250,
+        borderRadius: 20,
+        textAlign:'center',
+        top: 0
+      },
+    usageInput1:{
+        borderWidth: 2,
+        height: 50,
+        width: 300,
+        textAlign:'center',
+        borderRadius: 20,
+        backgroundColor: '#EBE8CD',
+        justifyContent: 'center',
+        fontFamily: "sans-serif-condensed",
+        left: 28,
+        top: 10
+    },
+      usageInput:{
+        borderWidth: 2,
+        height: 50,
+        width: 300,
+        textAlign:'center',
+        borderRadius: 20,
+        backgroundColor: '#EBE8CD',
+        justifyContent: 'center',
+        fontFamily: "sans-serif-condensed",
+        left: 28
+    },
+      modalBackGround: {
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        modalContainer: {
+            height:350,
+          width: '90%',
+          backgroundColor: '#F2E7BE',
+          borderRadius: 20,
+          elevation: 20,
+          alignContent:'center',
+          alignItems:'center'
+        },
+        header: {
+          width: '100%',
+          height: 40,
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+        },
+        mTxt:{
+          fontStyle: "normal",
+          fontSize: 25,
+          textAlign:'center',
+          height: 60,
+          padding:5,
+          margin:5,
+          fontWeight: "bold",
+          fontFamily: "sans-serif-condensed"
+      },
+      mButton: {
+          backgroundColor: '#DCB900',
+          height: 45,
+          width: 120,
+          top:0,
+          borderRadius: 20,
+          textAlign:'center'
+      },
     container: {
       flex: 1,
       backgroundColor: '#FCD859',

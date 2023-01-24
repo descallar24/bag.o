@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   step4img:{
     width: 210,
     height: 170,
-    bottom: -55,
+    bottom: -50,
     left: 85,
   },
   box0:{
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   
   btext:{
       fontStyle: "normal",
-      fontSize: 23,
+      fontSize: 21,
       textAlign:'center',
       width: 50,
       fontWeight: "bold",

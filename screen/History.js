@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   
   btext:{
       fontStyle: "normal",
-      fontSize: 23,
+      fontSize: 21,
       textAlign:'center',
       width: 50,
       fontWeight: "bold",

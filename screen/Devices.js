@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import monitor from './pics/monitor.png'
@@ -15,97 +16,11 @@ import { Modal, Animated,Pressable, TextInput, ImageBackground} from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import close from './pics/close.png'
 import success from './pics/success.png'
-import { useState } from 'react';
-import { onChange } from 'react-native-reanimated';
-
-
-const ModalPoup = ({visible, children}) => {
-  const [showModal, setShowModal] = React.useState(visible);
-  
-  
-
-  
-  const scaleValue = React.useRef(new Animated.Value(0)).current;
-  React.useEffect(() => {
-    toggleModal();
-  }, [visible]);
-  const toggleModal = () => {
-    if (visible) {
-      setShowModal(true);
-      Animated.spring(scaleValue, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      setTimeout(() => setShowModal(false), 200);
-      Animated.timing(scaleValue, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-
-    const image1 = () => {
-      source = {monitor};
-    }
-  };
-
-  
-  return (
-    <Modal transparent visible={showModal}>
-      <View style={styles.modalBackGround}>
-        <Animated.View
-          style={[styles.modalContainer, {transform: [{scale: scaleValue}]}]}>
-          {children}
-        </Animated.View>
-      </View>
-    </Modal>
-  );
-};
-
 
 const Devices = ({ navigation }) => {
-  const [visible, setVisible] = React.useState(false);
-
   return (
     <ScrollView>
-       <View>
-        <ModalPoup visible={visible}>
-          <View style={{alignItems: 'center'}}>
-            <View style={styles.header}>
-              <TouchableOpacity onPress={() => setVisible(false)}>
-                <Image
-                  source={close}
-                  style={{height: 30, width: 30, top:-190, right:-3}}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Image
-              style={{height: 100, width: 100,left:-100, top:10}}
-            />
-          </View>
-  
-          <Text id='name1' style={{left: 140, bottom:70, fontWeight:"bold", fontSize:20}}>
-            Name: 
-          </Text>
-          <Text id='watts' style={{left: 140, bottom:60, fontWeight:"bold", fontSize:20}}>
-            Wattage: 
-          </Text>
-          <TextInput style = {styles.usageInput} placeholder="number of hours used" keyboardType="numeric"/>
-          <TextInput style = {styles.usageInput1} placeholder="number of devices" keyboardType="numeric"/>
-
-            <TouchableOpacity style={styles.calcButton}></TouchableOpacity>
-          <TouchableOpacity style={styles.mButton} onPress={() => setVisible(false)}>
-            <Text style={styles.mTxt}>SAVE</Text>
-          </TouchableOpacity>
-        </ModalPoup>
-    
      
-
-        </View>
       <SafeAreaView style={styles.container}>
        
 
@@ -118,53 +33,72 @@ const Devices = ({ navigation }) => {
           <Text style={styles.textsyd}>SELECT YOUR DEVICE</Text>
         </View>
         <View style={styles.monitorbg}>
-        <TouchableOpacity  onPress={() =>
-          setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Computer')
+        }}>
         <Image source={monitor} style={styles.monitorimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.ricecookerbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Ricecooker')
+        }}>
         <Image source={ricecooker} style={styles.ricecookerimg}/>
         </TouchableOpacity>  
         </View>
         <View style={styles.ironbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Flatiron')
+        }} >
         <Image source={iron} style={styles.ironimg}/>
         </TouchableOpacity> 
         </View>
         <View style={styles.airconbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('AC')
+        }}>
         <Image source={aircon} style={styles.airconimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.tvbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('TV')
+        }}>
         <Image source={tv} style={styles.tvimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.laptopbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Laptop')
+        }} >
         <Image source={laptop} style={styles.laptopimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.bulbbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Bulb')
+        }}>
         <Image source={bulb} style={styles.bulbimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.cfanbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Cfan')
+        }}>
         <Image source={cfan} style={styles.cfanimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.refbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Ref')
+        }}>
         <Image source={ref} style={styles.refimg}/>
         </TouchableOpacity>
         </View>
         <View style={styles.waterhbg}>
-        <TouchableOpacity onPress={() => setVisible(true)}>
+        <TouchableOpacity onPress={()=> {
+          navigation.navigate('Heater')
+        }}>
         <Image source={waterh} style={styles.waterhimg}/>
         </TouchableOpacity>
         </View>

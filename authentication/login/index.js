@@ -5,6 +5,8 @@ import { StyleSheet } from "react-native";
 import { useTogglePasswordVisibility } from "../useTogglePasswordVisibility";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Dashboard from "../dashboard";
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 
 export default function Login (){
     const navigation = useNavigation ();
@@ -28,7 +30,7 @@ export default function Login (){
         }
       };
     
-      const checkPasswordValidity = value => {
+      /*const checkPasswordValidity = value => {
         const isNonWhiteSpace = /^\S*$/;
         if (!isNonWhiteSpace.test(value)) {
           return 'Password must not contain Whitespaces.';
@@ -62,7 +64,7 @@ export default function Login (){
     
         return null;
       };
-    
+    */
       const handleLogin = () => {
         const checkPassowrd = checkPasswordValidity(password);
         if (!checkPassowrd) {
@@ -84,27 +86,70 @@ export default function Login (){
         }
       };
 
+      const SignupSchema = Yup.object().shape({
+        email: Yup.string()
+        .email('Invalid email')
+        .min(5, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Enter email'),
+        password: Yup.string()
+        .min(8, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Please enter your password')
+        .matches(
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+            'Must contain minumum of 8 character, at least one uppercase letter'  ),
+
+      });
     return (
         <ImageBackground source={require('./309801225_1271235570111784_2236775530307066990_n.png')} resizeMode = "cover" style = {styles.bgimage}>
+       <Formik
+             initialValues={{
+                firstname: '',
+                lastname: '',
+                email: '',
+                password: '',
+                confirmpassword: '',
+              }}
+              validationSchema={SignupSchema}
+             >
+              {({values, errors, touched, handleChange, handleSubmit, setFieldTouched, isValid }) => (
+
         <View  style ={styles.container}>
             <Image source={require('./electriCAL__2_-removebg-preview.png')}style = {styles.image}/>
             <Text>{warning}</Text>
-            <TextInput style={styles.txtinput} placeholder="Email Address" value={email} onChangeText={text => handleCheckEmail(text)}/>
-            {checkValidEmail ? (
-            <Text style={styles.textFailed}>Invalid Email!</Text>
-             ) : (
-            <Text style={styles.textFailed}> </Text>
+            <TextInput style={styles.txtinput} placeholder="Email Address" 
+           value={values.email} 
+           onChangeText={handleChange('email')} 
+           onBlur={() => setFieldTouched('email')}/>
+             {touched.email &&
+                errors.email &&(
+            <Text style={styles.errorTxt}>{errors.email}</Text>
+             )}
+
+            <TextInput style={styles.txtinput} placeholder="Password"  
+            secureTextEntry={passwordVisibility}
+            value={values.password} 
+            onChangeText={handleChange('password')} 
+            onBlur={() => setFieldTouched('password')}
+            />
+             {touched.password &&
+                     errors.password &&(
+            <Text style={styles.errorTxt}>{errors.password}</Text>
             )}
-            <TextInput style={styles.txtinput} placeholder="Password"  value={password} onChangeText={setPassword} secureTextEntry={passwordVisibility}/>
             <Pressable style={styles.eye} onPress={handlePasswordVisibility}>
                 <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
             </Pressable>
-            <TouchableOpacity style={styles.loginButton} onPress= {() => {
+            <TouchableOpacity 
+            disabled={!isValid}
+            style={[styles.loginButton,{backgroundColor: isValid ? '#DCB900' :  '#F3DA82'} ]}
+            onPress= {() => {
               navigation.navigate('DrawBar');
             }} >
                 <Text style={styles.text} >LOG IN</Text>    
             </TouchableOpacity>
-            <TouchableOpacity onPress={() =>{
+            <TouchableOpacity
+            onPress={() =>{
                     navigation.navigate('Forgotpassword');
                 }}>
                 <Text style={styles.fg}>Forgot Password?</Text>
@@ -113,7 +158,11 @@ export default function Login (){
                  <Text onPress={() =>{
                     navigation.navigate('Registration');
                 }} style={styles.fg2}> Sign Up </Text> </Text>
+                
         </View>
+                                 )}
+        </Formik>
+
         </ImageBackground>
     )
 }
@@ -167,7 +216,7 @@ const styles = StyleSheet.create({
 
     loginButton: {
         width: 200,
-        backgroundColor: '#DCB900',
+     //   backgroundColor: '#DCB900',
         height: 50,
         width: 250,
         borderRadius: 20,

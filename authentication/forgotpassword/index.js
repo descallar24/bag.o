@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         height: 60,
         paddingLeft:5,
+        width: 320,
         marginTop:-5,
         fontWeight: "thin",
         fontFamily: "sans-serif-condensed",

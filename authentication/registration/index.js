@@ -24,11 +24,11 @@ export default function Registration(){
         firstname: Yup.string()
           .min(3, 'Too Short!')
           .max(50, 'Too Long!')
-          .required('Pkease enter your first name'),
+          .required('Please enter your first name'),
           lastname: Yup.string()
           .min(3, 'Too Short!')
           .max(50, 'Too Long!')
-          .required('Please enter your first name'),
+          .required('Please enter your last name'),
         email: Yup.string()
         .email('Invalid email')
         .min(5, 'Too Short!')
@@ -130,7 +130,8 @@ export default function Registration(){
             disabled={!isValid}
             style={[styles.regButton,{backgroundColor: isValid ? '#DCB900' :  '#F3DA82'} ]}
             onPress={()=>{
-                navigation.navigate("Login");
+                    navigation.navigate("Login");
+                
                 
             }}>
                 <Text style={styles.text}>REGISTER</Text> 

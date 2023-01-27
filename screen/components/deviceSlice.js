@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export const deviceSlice = createSlice({
+  
   name: 'devices',
   initialState: {
     myDevice: [
@@ -10,7 +11,8 @@ export const deviceSlice = createSlice({
             noOfHours: '',
         }*/
     ],
-    token: ''
+    token: '',
+    
   },
   reducers: {
     mutateMyDevice: (state, actions) => {
@@ -20,11 +22,15 @@ export const deviceSlice = createSlice({
     },
     mutateToken: (state, actions) => {
         state.token = actions.payload;
-    }
+    },
+    resetMyDevice: (state) => {
+      state.myDevice = [];
+  }
   },
+  
 })
 
 // Action creators are generated for each case reducer function
-export const { mutateMyDevice, mutateToken } = deviceSlice.actions
+export const { mutateMyDevice, mutateToken, resetMyDevice} = deviceSlice.actions
 
 export default deviceSlice.reducer

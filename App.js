@@ -18,7 +18,7 @@ import Instructions from './screen/Instructions';
 import History from './screen/History';
 import YourDevices from './screen/YourDevices';
 import Computer from './screen/Computer';
-import Computeredit from './screen/Computeredit';
+import EditDevice from './screen/EditDevice';
 import Ricecooker from './screen/Ricecooker';
 import Ricecookeredit from './screen/Ricecookeredit';
 import Flatiron from './screen/Flatiron';
@@ -36,7 +36,7 @@ import Result from './screen/Result';
 import { Provider } from 'react-redux';
 import store from './plugins/store';
 
-
+import Reports from './screen/Reports';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -60,7 +60,7 @@ export default function App() {
         <Stack.Screen name= "History" component={History} />
         <Stack.Screen name= "Your Devices" component={YourDevices} />
         <Stack.Screen name= "Computer" component={Computer} />
-        <Stack.Screen name= "Computeredit" component={Computeredit} />
+        <Stack.Screen name= "EditDevice" component={EditDevice} />
         <Stack.Screen name= "Ricecooker" component={Ricecooker} />
         <Stack.Screen name= "Ricecookeredit" component={Ricecookeredit} />
         <Stack.Screen name= "Flatiron" component={Flatiron} />
@@ -75,6 +75,8 @@ export default function App() {
         <Stack.Screen name= "Ref" component={Ref} />
         <Stack.Screen name= "Heater" component={Heater} />
         <Stack.Screen name= "Result" component={Result} />
+        <Stack.Screen name= "Reports" component={Reports} />
+
 
 
         </Stack.Navigator>

@@ -1,90 +1,73 @@
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { resetMyDevice } from './components/deviceSlice';
-import DeviceCard from './components/deviceCard';
-const YourDevices = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const clearDevices = () => {
-    dispatch(resetMyDevice());
-  };
-  const myDevices = useSelector((state) => state.devices.myDevice)
-  
+import ReportCard from './components/reportCard';
+
+
+const Reports = ({ navigation }) => {
+    const myDevices = useSelector((state) => state.devices.myDevice)
+    let total = 0;
+  for (let i=0; i<myDevices.length; i++ ){
+      total += myDevices[i].calculate
+  }
+    let kwh= 10.66;
+    let totalBillday = total * kwh;
+    let MonthBill = totalBillday * 30;
+
   return (
-    <ScrollView style={{}}>
+    <ScrollView>
       <SafeAreaView style={styles.container}>
    
        
-        <View style={{}}>
-        <Text style={styles.textAbout}>YOUR DEVICES</Text>
-        
+        <View style={{alignContent:'center', alignItems:'center'}}>
+        <Text style={styles.textAbout}>REPORTS</Text>
+
         </View>
         
         <TouchableOpacity style={styles.Bbutton} onPress={()=> {
-          navigation.navigate('DrawBar')
+          navigation.navigate('Your Devices')
         }}>
-          
+        
           <Text style={styles.btext}>BACK</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress= {() => {
-          navigation.navigate('Reports')
-        }}>
+       <View style={{alignItems:'center'}}>
+       <Text style={{
+          fontWeight: 'bold',
+          fontSize: 15,
+          top: 10,
+          marginBottom:10
+        }} >Possible total KWH per day: {total.toFixed(2)}</Text>
         <Text style={{
           fontWeight: 'bold',
-          width:70,
-          fontSize:15,
-          left:315,
-          height:25,
-          bottom:40,
-          color:'white',
-          backgroundColor:'red',
-          borderRadius:10,
-          textAlign:'center'          
-        }}>Reports</Text>
-
-        </TouchableOpacity>
-        <View style={styles.row}>
-          
-        {
-            (myDevices != undefined) ? myDevices.map(obj => <DeviceCard image={obj.image} devName={obj.devName} noOfDevices={obj.noOfDevices} noOfHours={obj.noOfHours} calculate={obj.calculate} />) : null
-          }
-   <TouchableOpacity style={{}} onPress={clearDevices}>
-      <Text style={{
+          fontSize: 15,
+          top: 10,
+          marginBottom:10
+        }} >Possible bill per day: ₱{totalBillday.toFixed(2)}</Text>
+        <Text style={{
           fontWeight: 'bold',
-          width:70,
-          fontSize:15,
-          left:163,
-          height:35,
-          bottom:12,
-          color:'white',
-          backgroundColor:'red',
-          borderRadius:10,
-          textAlign:'center',
-          marginBottom:20,
-
-        }}>Clear Devices</Text>
-    </TouchableOpacity>
-
+          fontSize: 15,
+          top: 10,
+          marginBottom:10
+        }} >Possible bill per Month: ₱{MonthBill.toFixed(2)}</Text>
+       </View>
+        
+        <View >
+        {
+            (myDevices != undefined) ? myDevices.map(obj => <ReportCard devName={obj.devName} noOfDevices={obj.noOfDevices} noOfHours={obj.noOfHours} calculate={obj.calculate} perDev={obj.perDev} />) : null
+          }
+       
+      
       </View>
       </SafeAreaView>
     </ScrollView>
   );
 }
 
-export default YourDevices;
+export default Reports;
 
 const styles = StyleSheet.create({
-   row:{
-    flexDirection:'row',
-    flexWrap: 'wrap',
-    flex: 1,
-    gap: '1rem',
-
-   },
-   
+  
       textsyd: {
         fontStyle: "normal",
         fontSize: 25,
@@ -124,7 +107,7 @@ const styles = StyleSheet.create({
             width:80,
           borderRadius: 15,
           height:35,
-          bottom:5
+          bottom:10
   
       },
       

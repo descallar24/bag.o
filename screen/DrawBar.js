@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState,useEffect } from 'react';
 import {Alert, TextInput, Animated, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Touchable } from 'react-native';
 import About1 from './About';
 import Devices from './Devices';
@@ -16,7 +16,9 @@ import Instructions from './Instructions';
 import History from './History';
 import YourDevices from './YourDevices';
 import { Modal,Pressable, ImageBackground,TouchableWithoutFeedback,Keyboard} from "react-native";
+import { useDispatch, useSelector } from 'react-redux';
 import { bool } from 'yup';
+import { mutateMyHistory } from './components/HistorySlice';
 
 const ModalPoup = ({visible, children}) => {
     const [showModal, setShowModal] = React.useState(visible);
@@ -53,13 +55,16 @@ const ModalPoup = ({visible, children}) => {
       
     );
   };
+
   
+
 export default function DrawBar() {
-  
+  const history = useSelector((state) => state.devices.myHistory)
+    const dispatch = useDispatch()
     const [visible, setVisible] = React.useState(false);
     const [currentTab, setCurrentTab] = useState("Dashboard");
     const [showMenu, setShowMenu] = useState(false);
-    const kwh = 16.673;
+    const kwh = 10.66;
     const [result, setResult] = useState('')
     const offsetValue = useRef(new Animated.Value(0)).current;
     const scaleValue = useRef(new Animated.Value(1)).current;
@@ -72,6 +77,7 @@ export default function DrawBar() {
     const [text,setText] = useState('');
     const [budget, setBudget] = useState('')
     const total = budget * kwh;
+    
 
     const reach = "You have reach the limit";
     const notreach = "Still on the budget";
@@ -84,6 +90,7 @@ export default function DrawBar() {
       Alert.alert(notreach) ;
     };
   }
+
 
     return (
       
@@ -115,7 +122,7 @@ export default function DrawBar() {
             Budget: 
           </Text>
          
-          <Text style={{right:110, top:90, fontWeight:"bold", fontSize:20}}>
+          <Text style={{right:110, top:90, fontWeight:"bold", fontSize:20}}  >
             Total: 
           </Text>
           <Text style={{
@@ -130,8 +137,7 @@ export default function DrawBar() {
                 left:40,
                 borderRadius:20,
                 fontSize:30,
-                color: "red"
-              
+                color: "red"  
           }}>₱{text}</Text>
             
               <Text style={{
@@ -147,8 +153,9 @@ export default function DrawBar() {
                 borderRadius:20,
                 fontSize:22,
                 color: "red"
-
-          }}>₱{total}</Text>
+          }}
+          >₱{total}</Text>
+           
 
 
          
@@ -240,6 +247,7 @@ export default function DrawBar() {
                     width: 150,
                     height: 150,
                     left: 110,
+                    bottom:30
                 }}></Image>
                  <Text style = {{
                      fontStyle: "normal",
@@ -252,7 +260,7 @@ export default function DrawBar() {
                      fontFamily: "sans-serif-condensed",
                      marginBottom: 410,
                      right: 40,
-                     top:10,
+                     top:-30,
                      id:'iyb'
                  }}>
                  Input Your Budget: ₱{text}
@@ -262,7 +270,7 @@ export default function DrawBar() {
                     width: 330,
                     padding:10,
                     margin:5,
-                    marginTop:-410,
+                    marginTop:-455,
                     textAlign:'center',
                     borderRadius: 20,
                     backgroundColor: '#EBE8CD',
@@ -346,8 +354,16 @@ export default function DrawBar() {
                 marginTop: -33,
                 marginLeft: 110
             }} placeholder="Input Electricity Usage " keyboardType="numeric"/>
-            <TouchableOpacity onPress={() => setVisible(true)
-        } style={{
+            <TouchableOpacity 
+
+            onPress={()=> {
+              setVisible(true)
+              dispatch(mutateMyHistory({
+                pb: total, 
+
+        })) 
+        }} 
+        style={{
                 width: 200,
                 backgroundColor: '#DCB900',
                 height: 50,
@@ -357,7 +373,10 @@ export default function DrawBar() {
                 marginBottom: 5,
                 marginTop: 25,
                 left: 60
-            }}>
+            }}
+            
+            >
+              
                 <Text style = {{
                     fontStyle: "normal",
                     fontSize: 25,
@@ -368,14 +387,20 @@ export default function DrawBar() {
                     fontWeight: "bold",
                     fontFamily: "sans-serif-condensed",
                     marginBottom: 400
-                }}>CALCULATE</Text>
+                }}
+                >CALCULATE</Text>
             </TouchableOpacity>
+             
+        
+            <Text></Text>
 
            </Animated.View>
 
             </View>
+            
         </SafeAreaView>
-    )
+        
+)
 }
 
 const TabButton = (currentTab, setCurrentTab,title) =>{
@@ -397,6 +422,12 @@ const TabButton = (currentTab, setCurrentTab,title) =>{
 
 
 const styles = StyleSheet.create({
+    dateText: {
+      fontSize: 23,
+      color: 'black',
+      paddingBottom: 15
+    },
+  
     textsyd: {
         fontStyle: "normal",
         fontSize: 25,

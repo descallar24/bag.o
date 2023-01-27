@@ -25,15 +25,19 @@ import { mutateMyDevice } from './components/deviceSlice';
 const Computer = ({ navigation }) => {
   const devices = useSelector((state) => state.devices.myDevice)
   const [data, setData] = useState({
+    devName: 'Computer',
     noOfDevices: '',
-    noOfHours: ''
+    noOfHours: '',
+    perDev: perDev
   })
 
   const [image, setImage] = useState({
     monitor:monitor
   })
-
-
+  const p_kwh= 10.66
+  const KWH = 0.225
+  const calculate = KWH * data.noOfDevices * data.noOfHours 
+  const perDev= calculate * p_kwh
   const dispatch = useDispatch()
   return (
     <ScrollView>
@@ -65,12 +69,15 @@ const Computer = ({ navigation }) => {
               style={{height: 100, width: 100, bottom:380}}
             />
           </View>
-  
+          
           <Text style={{ bottom:350, fontWeight:"bold", fontSize:20}}>
-            Name: Computer
+            Name: {data.devName}
+          </Text>
+          <Text style={{ bottom:340, fontWeight:"bold", fontSize:20}}>
+            KWH: {KWH}
           </Text>
           <Text style={{ bottom:330, fontWeight:"bold", fontSize:20}}>
-            Wattage: 300W
+            Total KW: {calculate.toFixed(2)}
           </Text>
           <Image  onChange={() => {
                 setImage({
@@ -91,13 +98,17 @@ const Computer = ({ navigation }) => {
                 });
             }}/>
 
-          <TouchableOpacity style={styles.mButton} onPress={()=> {
-          navigation.navigate('Devices')
+          <TouchableOpacity style={styles.mButton}  onPress={()=> {
+          navigation.navigate('Computer')
           dispatch(mutateMyDevice({
-            monitor: image.monitor,
+            image: image.monitor,
             noOfDevices: data.noOfDevices,
             noOfHours: data.noOfHours,
+            calculate: calculate,
+            devName: data.devName,
+            perDev: perDev
         })) 
+        
           Alert.alert ("Device Successfully Added!") 
         }}> 
             <Text style={styles.mTxt}>SAVE</Text>

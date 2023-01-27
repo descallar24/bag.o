@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import monitor from './pics/monitor.png'
 import ricecooker from './pics/ricecooker.png'
 import iron from './pics/iron.png'
@@ -15,8 +15,30 @@ import { Modal, Animated,Pressable, TextInput, ImageBackground} from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import close from './pics/close.png'
 import success from './pics/success.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { mutateMyDevice } from './components/deviceSlice';
+
+
+
 
 const Cfan = ({ navigation }) => {
+  const devices = useSelector((state) => state.devices.myDevice)
+  const [data, setData] = useState({
+    devName: 'Ceiling Fan',
+    noOfDevices: '',
+    noOfHours: '',
+    perDev: perDev
+  })
+
+  const [image, setImage] = useState({
+    cfan:cfan
+  })
+  const p_kwh= 10.66
+  const KWH = 0.16
+  const calculate = KWH * data.noOfDevices * data.noOfHours 
+  const perDev= calculate * p_kwh
+  const dispatch = useDispatch()
   return (
     <ScrollView>
   
@@ -35,7 +57,7 @@ const Cfan = ({ navigation }) => {
                 borderRadius:10
               }}
         ></Text>
-        
+       
         <View style={{alignItems: 'center'}}>
             <View style={styles.header}>
              
@@ -44,21 +66,50 @@ const Cfan = ({ navigation }) => {
           <View style={{alignItems: 'center'}}>
             <Image
               source={cfan}
-              style={{height: 120, width: 150, bottom:380}}
+              style={{height: 90, width: 150, bottom:380}}
             />
           </View>
-  
+          
           <Text style={{ bottom:350, fontWeight:"bold", fontSize:20}}>
-            Name: Ceiling Fan
+            Name: {data.devName}
+          </Text>
+          <Text style={{ bottom:340, fontWeight:"bold", fontSize:20}}>
+            KWH: {KWH}
           </Text>
           <Text style={{ bottom:330, fontWeight:"bold", fontSize:20}}>
-            Wattage: 65-175W
+            Total KW: {calculate.toFixed(2)}
           </Text>
-          <TextInput style = {styles.usageInput} placeholder="number of hours used" keyboardType="numeric"/>
-          <TextInput style = {styles.usageInput1} placeholder="number of devices" keyboardType="numeric"/>
+          <Image  onChange={() => {
+                setImage({
+                    cfan: image
+                });
+            }}></Image>
+          <TextInput style = {styles.usageInput} keyboardType="numeric" placeholder="No. of Devices" value={data.noOfDevices} 
+          onChangeText={(text) => {
+                setData({
+                    ...data,
+                    noOfDevices: text
+                });
+            }}/>
+          <TextInput style = {styles.usageInput1} keyboardType="numeric" placeholder="No. of Hours" value={data.noOfHours} onChangeText={(text) => {
+                setData({
+                    ...data,
+                    noOfHours: text
+                });
+            }}/>
 
-          <TouchableOpacity style={styles.mButton} onPress={()=> {
-          navigation.navigate('Devices')
+          <TouchableOpacity style={styles.mButton}  onPress={()=> {
+          navigation.navigate('Cfan')
+          dispatch(mutateMyDevice({
+            image: image.cfan,
+            noOfDevices: data.noOfDevices,
+            noOfHours: data.noOfHours,
+            calculate: calculate,
+            devName: data.devName,
+            perDev: perDev
+        })) 
+        
+          Alert.alert ("Device Successfully Added!") 
         }}> 
             <Text style={styles.mTxt}>SAVE</Text>
           </TouchableOpacity>
@@ -163,7 +214,7 @@ btext:{
     backgroundColor:'#FEF0B3',
     flexDirection: "row",
     alignItems: "center",
-    width:60,
+    width:70,
     textAlign:'center',
     top: 50,
     right:150,

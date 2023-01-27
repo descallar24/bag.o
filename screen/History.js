@@ -2,8 +2,12 @@ import * as React from 'react';
 import {Image, Button,View,Text,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 
 import { ScrollView } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+
+import HistoryCard from './components/HistoryCard';
 
 const History = ({ navigation }) => {
+    const myHistory = useSelector((state) => state.history.myHistory)
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
@@ -19,24 +23,9 @@ const History = ({ navigation }) => {
           <Text style={styles.btext}>BACK</Text>
         </TouchableOpacity>
         <View>
-        <Text style={styles.h1}></Text>
-        <Text style={styles.h1}></Text>
-        <Text style={styles.h1}></Text>
-        <Text style={styles.h1}></Text>
-        <Text style={styles.h1}></Text>
-        <Text style={styles.h1}></Text>
-        <Text style={styles.t1}>12/10/22</Text>
-        <Text style={styles.t2}>12/11/22</Text>
-        <Text style={styles.t3}>12/12/22</Text>
-        <Text style={styles.t4}>12/13/22</Text>
-        <Text style={styles.t5}>12/14/22</Text>
-        <Text style={styles.t6}>12/15/22</Text>
-        <Text style={styles.p1}>POSSIBLE BILL:</Text>
-        <Text style={styles.p2}>POSSIBLE BILL:</Text>
-        <Text style={styles.p3}>POSSIBLE BILL:</Text>
-        <Text style={styles.p4}>POSSIBLE BILL:</Text>
-        <Text style={styles.p5}>POSSIBLE BILL:</Text>
-        <Text style={styles.p6}>POSSIBLE BILL:</Text>
+        {
+            (myHistory != undefined) ? myHistory.map(obj => <HistoryCard pb={obj.pb} moment={obj.moment} />) : null
+          }
         
         </View>
       </SafeAreaView>
